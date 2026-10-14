@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도도 근절 내기 현황판</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="max-w-xl w-full bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6">
+        <!-- Header -->
+        <div class="text-center space-y-2">
+            <span class="bg-red-500/20 text-red-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">OFFICIAL CHALLENGE</span>
+            <h1 class="text-3xl font-extrabold tracking-tight text-white">🚫 도도 근절 내기</h1>
+            <p class="text-slate-400 text-sm">친구들과 함께하는 도도 타파 프로젝트</p>
+        </div>
+
+        <!-- D-Day Counter Card -->
+        <div class="bg-slate-900/60 border border-slate-700/60 rounded-xl p-5 text-center space-y-1">
+            <div class="text-sm text-slate-400 font-medium">시작일: 2026년 10월 14일</div>
+            <div class="text-4xl font-black text-red-400 tracking-tight" id="d-day-counter">D+1</div>
+            <div class="text-xs text-slate-500">오늘부터 진정한 근절이 시작됩니다.</div>
+        </div>
+
+        <!-- Bet Content Card -->
+        <div class="space-y-3">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-200">📜 내기 내용 및 규칙</h2>
+                <button id="edit-btn" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg transition">내용 편집</button>
+            </div>
+            
+            <!-- Display Mode -->
+            <div id="content-display" class="bg-slate-900/60 border border-slate-700/60 rounded-xl p-4 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap min-h-[120px]">
+1. 내기 목표: 도도 완벽 근절
+2. 기간: 오늘부터 무기한
+3. 위반 시 벌칙: ...
+4. 참여자: 친구들 전원
+            </div>
+
+            <!-- Edit Mode (Hidden by default) -->
+            <div id="content-edit" class="hidden space-y-2">
+                <textarea id="content-input" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-slate-200 text-sm leading-relaxed focus:outline-none focus:border-red-500 min-h-[120px] resize-y"></textarea>
+                <div class="flex justify-end gap-2">
+                    <button id="cancel-btn" class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs px-4 py-2 rounded-lg transition">취소</button>
+                    <button id="save-btn" class="bg-red-600 hover:bg-red-500 text-white text-xs px-4 py-2 rounded-lg font-semibold transition">저장하기</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / Status -->
+        <div class="text-center text-xs text-slate-500 pt-2 border-t border-slate-700/50">
+            GitHub Pages로 배포된 페이지입니다. 친구들과 링크를 공유하세요!
+        </div>
+    </div>
+
+    <script>
+        // D-Day calculation (Start date: Oct 14, 2026)
+        const startDate = new Date('2026-10-14T00:00:00');
+        const today = new Date();
+        
+        const diffTime = today.setHours(0,0,0,0) - startDate.setHours(0,0,0,0);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        
+        document.getElementById('d-day-counter').textContent = diffDays >= 1 ? `D+${diffDays}` : `D-${Math.abs(diffDays - 1)}`;
+
+        // LocalStorage for content
+        const defaultContent = `1. 내기 목표: 도도 완벽 근절\n2. 기간: 오늘부터 무기한\n3. 위반 시 벌칙: ...\n4. 참여자: 친구들 전원`;
+        
+        const displayEl = document.getElementById('content-display');
+        const editEl = document.getElementById('content-edit');
+        const inputEl = document.getElementById('content-input');
+        const editBtn = document.getElementById('edit-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+
+        let savedContent = localStorage.getItem('dodo_bet_content') || defaultContent;
+        displayEl.textContent = savedContent;
+        inputEl.value = savedContent;
+
+        editBtn.addEventListener('click', () => {
+            displayEl.classList.add('hidden');
+            editEl.classList.remove('hidden');
+            editBtn.classList.add('hidden');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            editEl.classList.add('hidden');
+            displayEl.classList.remove('hidden');
+            editBtn.classList.remove('hidden');
+            inputEl.value = savedContent;
+        });
+
+        saveBtn.addEventListener('click', () => {
+            savedContent = inputEl.value;
+            localStorage.setItem('dodo_bet_content', savedContent);
+            displayEl.textContent = savedContent;
+            editEl.classList.add('hidden');
+            displayEl.classList.remove('hidden');
+            editBtn.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
